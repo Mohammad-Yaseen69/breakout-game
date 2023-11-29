@@ -55,8 +55,8 @@ function update() {
     context.fillRect(player.x, player.y, player.width, player.height)
 
     context.fillStyle = 'white'
-    ball.x -= ball.VelocityX
-    ball.y -= ball.VelocityY
+    ball.x += ball.VelocityX
+    ball.y += ball.VelocityY
     context.fillRect(ball.x, ball.y, ball.width, ball.height)
 
     // Bounce Off
@@ -66,8 +66,20 @@ function update() {
     else if (ball.x <= 0 || ball.x + ball.width >= 500) {
         ball.VelocityX *= -1
     }
-    else if(ball.y >= 500){
-        alert('Game Over')
+    else if (ball.y >= 500) {
+        ball.x = canvasWidth / 2
+        ball.y = canvasHeight / 2
+    }
+
+    if (topCollision(ball, player)) {
+        ball.VelocityY *= -1
+    }
+    else if (leftCollision(ball, player) || rightCollision(ball, player)) {
+        ball.VelocityX *= -1
+    }
+    else if(bottomCollision(ball , player)){
+        ball.x = canvasWidth / 2
+        ball.y = canvasHeight / 2 
     }
 }
 
@@ -85,4 +97,24 @@ function movePlayer(e) {
             player.x = currentPosition
         }
     }
+}
+
+function detectCollision(a, b) {
+    return a.x < b.x + b.width &&
+        a.x + a.width > b.x &&
+        a.y < b.y + b.height &&
+        a.y + a.height > b.y
+}
+
+function topCollision(ball, block) {
+    return detectCollision(ball, block) && (ball.y + ball.height) >= block.y
+}
+function bottomCollision(ball, block) {
+    return detectCollision(ball, block) && (block.y + block.height) >= ball.y
+}
+function leftCollision(ball, block) {
+    return detectCollision(ball, block) && (ball.x + ball.width) >= block.y
+}
+function rightCollision(ball, block) {
+    return detectCollision(ball, block) && (block.x + block.width) >= ball.y
 }
