@@ -15,12 +15,12 @@ let ballVelocityX = 3
 let ballVelocityY = 2
 
 const ball = {
-    x : canvasWidth/2,
-    y : canvasHeight/2,
-    window : ballWidth,
-    height : ballHeight,
-    VelocityX : ballVelocityX,
-    VelocityY : ballVelocityY
+    x: canvasWidth / 2,
+    y: canvasHeight / 2,
+    width: ballWidth,
+    height: ballHeight,
+    VelocityX: ballVelocityX,
+    VelocityY: ballVelocityY
 }
 
 
@@ -55,9 +55,20 @@ function update() {
     context.fillRect(player.x, player.y, player.width, player.height)
 
     context.fillStyle = 'white'
-    ball.x += ball.VelocityX
-    ball.y += ball.VelocityY
-    context.fillRect(ball.x , ball.y , ball.window , ball.height)
+    ball.x -= ball.VelocityX
+    ball.y -= ball.VelocityY
+    context.fillRect(ball.x, ball.y, ball.width, ball.height)
+
+    // Bounce Off
+    if (ball.y <= 0) {
+        ball.VelocityY *= -1
+    }
+    else if (ball.x <= 0 || ball.x + ball.width >= 500) {
+        ball.VelocityX *= -1
+    }
+    else if(ball.y >= 500){
+        alert('Game Over')
+    }
 }
 
 function movePlayer(e) {
@@ -69,7 +80,7 @@ function movePlayer(e) {
     }
 
     else if (e.code == 'ArrowRight') {
-        let currentPosition = player.x +  player.playerVelocity;
+        let currentPosition = player.x + player.playerVelocity;
         if (!outOfBorder(currentPosition)) {
             player.x = currentPosition
         }
